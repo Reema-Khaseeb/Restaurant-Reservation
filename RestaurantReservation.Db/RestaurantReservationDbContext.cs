@@ -15,8 +15,11 @@ namespace RestaurantReservation.Db
         public DbSet<Employee> Employees { get; set; }
         public DbSet<MenuItem> MenuItems { get; set; }
 
-        public RestaurantReservationDbContext(DbContextOptions<RestaurantReservationDbContext> options) : base(options)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseSqlServer(
+                @"Server=(localdb)\mssqllocaldb;Database=RestaurantReservationCore;Trusted_Connection=True;"
+                );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
