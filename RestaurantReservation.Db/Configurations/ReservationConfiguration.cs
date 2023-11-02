@@ -14,15 +14,18 @@ namespace RestaurantReservation.Db.Configurations
             // Foreign Keys and Navigation Properties
             builder.HasOne(r => r.Customer)
                 .WithMany(c => c.Reservations)
-                .HasForeignKey(r => r.CustomerId);
+                .HasForeignKey(r => r.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(r => r.Restaurant)
                 .WithMany(rest => rest.Reservations)
-                .HasForeignKey(r => r.RestaurantId);
+                .HasForeignKey(r => r.RestaurantId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(r => r.Table)
                 .WithMany(t => t.Reservations)
-                .HasForeignKey(r => r.TableId);
+                .HasForeignKey(r => r.TableId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Seed data
             builder.HasData(
