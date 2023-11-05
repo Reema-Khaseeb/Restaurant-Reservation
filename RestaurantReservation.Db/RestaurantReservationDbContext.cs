@@ -18,7 +18,7 @@ namespace RestaurantReservation.Db
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\mssqllocaldb;Database=RestaurantReservationCore;Trusted_Connection=True;"
+                @"Server=localhost\SQLEXPRESS;Database=RestaurantReservationCore;Trusted_Connection=True;Encrypt=False"
                 );
         }
 

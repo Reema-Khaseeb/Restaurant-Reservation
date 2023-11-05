@@ -14,12 +14,12 @@ namespace RestaurantReservation.Db.Configurations
             builder.HasOne(o => o.Employee)
                 .WithMany(e => e.Orders)
                 .HasForeignKey(o => o.EmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(o => o.Reservation)
                 .WithMany(e => e.Orders)
                 .HasForeignKey(o => o.ReservationId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data
             builder.HasData(
