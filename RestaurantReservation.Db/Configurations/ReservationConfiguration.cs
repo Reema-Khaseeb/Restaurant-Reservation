@@ -15,17 +15,17 @@ namespace RestaurantReservation.Db.Configurations
             builder.HasOne(r => r.Customer)
                 .WithMany(c => c.Reservations)
                 .HasForeignKey(r => r.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(r => r.Restaurant)
                 .WithMany(rest => rest.Reservations)
                 .HasForeignKey(r => r.RestaurantId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(r => r.Table)
                 .WithMany(t => t.Reservations)
                 .HasForeignKey(r => r.TableId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data
             builder.HasData(

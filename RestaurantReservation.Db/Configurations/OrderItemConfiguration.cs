@@ -15,7 +15,7 @@ namespace RestaurantReservation.Db.Configurations
             builder.HasOne(oi => oi.MenuItem)
                 .WithMany(mi => mi.OrderItems)
                 .HasForeignKey(oi => oi.ItemId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Seed data
             builder.HasData(
