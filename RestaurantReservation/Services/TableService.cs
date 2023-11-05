@@ -1,58 +1,41 @@
-﻿using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
 
 namespace RestaurantReservation.Services
 {
-    public class TableService
+    public class TableService : ITableService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly ITableRepository _tableRepository;
 
-        public TableService(RestaurantReservationDbContext context)
+        public TableService(ITableRepository tableRepository)
         {
-            _context = context;
+            _tableRepository = tableRepository;
         }
 
         public async Task CreateTableAsync(Table table)
         {
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            await _context.Tables.AddAsync(table);
-            await _context.SaveChangesAsync();
+            await _tableRepository.CreateTableAsync(table);
         }
 
         public async Task<Table> GetTableAsync(int tableId)
         {
-            return await _context.Tables.FindAsync(tableId);
+            return await _tableRepository.GetTableAsync(tableId);
         }
 
         public async Task<IEnumerable<Table>> GetAllTablesAsync()
         {
-            return await _context.Tables.ToListAsync();
+            return await _tableRepository.GetAllTablesAsync();
         }
 
         public async Task UpdateTableAsync(Table table)
         {
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
-            _context.Tables.Update(table);
-            await _context.SaveChangesAsync();
+            await _tableRepository.UpdateTableAsync(table);
         }
 
         public async Task DeleteTableAsync(int tableId)
         {
-            var table = await _context.Tables.FindAsync(tableId);
-            if (table != null)
-            {
-                _context.Tables.Remove(table);
-                await _context.SaveChangesAsync();
-            }
+            await _tableRepository.DeleteTableAsync(tableId);
         }
     }
 }

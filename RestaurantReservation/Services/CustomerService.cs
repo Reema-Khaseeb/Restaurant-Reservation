@@ -1,15 +1,16 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
+using RestaurantReservation.Db.Interfaces;
+
 namespace RestaurantReservation.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(RestaurantReservationDbContext context)
+        public CustomerService(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
 
         public async Task CreateCustomerAsync(Customer customer)
@@ -19,18 +20,17 @@ namespace RestaurantReservation.Services
                 throw new ArgumentNullException(nameof(customer));
             }
 
-            await _context.Customers.AddAsync(customer);
-            await _context.SaveChangesAsync();
+            await _customerRepository.CreateCustomerAsync(customer);
         }
 
         public async Task<Customer> GetCustomerAsync(int customerId)
         {
-            return await _context.Customers.FindAsync(customerId);
+            return await _customerRepository.GetCustomerAsync(customerId);
         }
 
         public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
         {
-            return await _context.Customers.ToListAsync();
+            return await _customerRepository.GetAllCustomersAsync();
         }
 
         public async Task UpdateCustomerAsync(Customer customer)
@@ -40,18 +40,12 @@ namespace RestaurantReservation.Services
                 throw new ArgumentNullException(nameof(customer));
             }
 
-            _context.Customers.Update(customer);
-            await _context.SaveChangesAsync();
+            await _customerRepository.UpdateCustomerAsync(customer);
         }
 
         public async Task DeleteCustomerAsync(int customerId)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
-            if (customer != null)
-            {
-                _context.Customers.Remove(customer);
-                await _context.SaveChangesAsync();
-            }
+            await _customerRepository.DeleteCustomerAsync(customerId);
         }
     }
 }

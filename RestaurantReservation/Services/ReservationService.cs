@@ -1,58 +1,41 @@
-﻿using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
 
 namespace RestaurantReservation.Services
 {
-    public class ReservationService
+    public class ReservationService : IReservationService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly IReservationRepository _reservationRepository;
 
-        public ReservationService(RestaurantReservationDbContext context)
+        public ReservationService(IReservationRepository reservationRepository)
         {
-            _context = context;
+            _reservationRepository = reservationRepository;
         }
 
         public async Task CreateReservationAsync(Reservation reservation)
         {
-            if (reservation == null)
-            {
-                throw new ArgumentNullException(nameof(reservation));
-            }
-
-            await _context.Reservations.AddAsync(reservation);
-            await _context.SaveChangesAsync();
+            await _reservationRepository.CreateReservationAsync(reservation);
         }
 
         public async Task<Reservation> GetReservationAsync(int reservationId)
         {
-            return await _context.Reservations.FindAsync(reservationId);
+            return await _reservationRepository.GetReservationAsync(reservationId);
         }
 
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
         {
-            return await _context.Reservations.ToListAsync();
+            return await _reservationRepository.GetAllReservationsAsync();
         }
 
         public async Task UpdateReservationAsync(Reservation reservation)
         {
-            if (reservation == null)
-            {
-                throw new ArgumentNullException(nameof(reservation));
-            }
-
-            _context.Reservations.Update(reservation);
-            await _context.SaveChangesAsync();
+            await _reservationRepository.UpdateReservationAsync(reservation);
         }
 
         public async Task DeleteReservationAsync(int reservationId)
         {
-            var reservation = await _context.Reservations.FindAsync(reservationId);
-            if (reservation != null)
-            {
-                _context.Reservations.Remove(reservation);
-                await _context.SaveChangesAsync();
-            }
+            await _reservationRepository.DeleteReservationAsync(reservationId);
         }
     }
 }

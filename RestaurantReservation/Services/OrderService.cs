@@ -1,58 +1,41 @@
-﻿using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
 
 namespace RestaurantReservation.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderService(RestaurantReservationDbContext context)
+        public OrderService(IOrderRepository orderRepository)
         {
-            _context = context;
+            _orderRepository = orderRepository;
         }
 
         public async Task CreateOrderAsync(Order order)
         {
-            if (order == null)
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
-
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
+            await _orderRepository.CreateOrderAsync(order);
         }
 
         public async Task<Order> GetOrderAsync(int orderId)
         {
-            return await _context.Orders.FindAsync(orderId);
+            return await _orderRepository.GetOrderAsync(orderId);
         }
 
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return await _context.Orders.ToListAsync();
+            return await _orderRepository.GetAllOrdersAsync();
         }
 
         public async Task UpdateOrderAsync(Order order)
         {
-            if (order == null)
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
-
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
+            await _orderRepository.UpdateOrderAsync(order);
         }
 
         public async Task DeleteOrderAsync(int orderId)
         {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
+            await _orderRepository.DeleteOrderAsync(orderId);
         }
     }
 }

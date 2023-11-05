@@ -1,18 +1,29 @@
 ﻿using RestaurantReservation.Db;
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Services;
+using RestaurantReservation.Db.Repositories;
 
 using var context = new RestaurantReservationDbContext();
 
+// Create repository instances
+var customerRepository = new CustomerRepository(context);
+var restaurantRepository = new RestaurantRepository(context);
+var reservationRepository = new ReservationRepository(context);
+var orderItemRepository = new OrderItemRepository(context);
+var orderRepository = new OrderRepository(context);
+var tableRepository = new TableRepository(context);
+var employeeRepository = new EmployeeRepository(context);
+var menuItemRepository = new MenuItemRepository(context);
+
 // Create services for each entity
-var customerService = new CustomerService(context);
-var restaurantService = new RestaurantService(context);
-var reservationService = new ReservationService(context);
-var orderItemService = new OrderItemService(context);
-var orderService = new OrderService(context);
-var tableService = new TableService(context);
-var employeeService = new EmployeeService(context);
-var menuItemService = new MenuItemService(context);
+var customerService = new CustomerService(customerRepository);
+var restaurantService = new RestaurantService(restaurantRepository);
+var reservationService = new ReservationService(reservationRepository);
+var orderItemService = new OrderItemService(orderItemRepository);
+var orderService = new OrderService(orderRepository);
+var tableService = new TableService(tableRepository);
+var employeeService = new EmployeeService(employeeRepository);
+var menuItemService = new MenuItemService(menuItemRepository);
 
 // Create sample data
 var customer = new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "123-456-7890" };
@@ -55,7 +66,6 @@ var allTables = await tableService.GetAllTablesAsync();
 var allEmployees = await employeeService.GetAllEmployeesAsync();
 var allMenuItems = await menuItemService.GetAllMenuItemsAsync();
 
-
 // Print Customers' data
 foreach (var customerData in allCustomers)
 {
@@ -66,7 +76,3 @@ foreach (var customerData in allCustomers)
     Console.WriteLine($"Phone Number: {customerData.PhoneNumber}");
     Console.WriteLine();
 }
-
-
-
-

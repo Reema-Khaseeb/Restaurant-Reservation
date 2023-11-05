@@ -1,16 +1,16 @@
-﻿using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
 
 namespace RestaurantReservation.Services
 {
-    public class MenuItemService
+    public class MenuItemService : IMenuItemService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly IMenuItemRepository _menuItemRepository;
 
-        public MenuItemService(RestaurantReservationDbContext context)
+        public MenuItemService(IMenuItemRepository menuItemRepository)
         {
-            _context = context;
+            _menuItemRepository = menuItemRepository;
         }
 
         public async Task CreateMenuItemAsync(MenuItem menuItem)
@@ -20,18 +20,17 @@ namespace RestaurantReservation.Services
                 throw new ArgumentNullException(nameof(menuItem));
             }
 
-            await _context.MenuItems.AddAsync(menuItem);
-            await _context.SaveChangesAsync();
+            await _menuItemRepository.CreateMenuItemAsync(menuItem);
         }
 
         public async Task<MenuItem> GetMenuItemAsync(int menuItemId)
         {
-            return await _context.MenuItems.FindAsync(menuItemId);
+            return await _menuItemRepository.GetMenuItemAsync(menuItemId);
         }
 
         public async Task<IEnumerable<MenuItem>> GetAllMenuItemsAsync()
         {
-            return await _context.MenuItems.ToListAsync();
+            return await _menuItemRepository.GetAllMenuItemsAsync();
         }
 
         public async Task UpdateMenuItemAsync(MenuItem menuItem)
@@ -41,18 +40,12 @@ namespace RestaurantReservation.Services
                 throw new ArgumentNullException(nameof(menuItem));
             }
 
-            _context.MenuItems.Update(menuItem);
-            await _context.SaveChangesAsync();
+            await _menuItemRepository.UpdateMenuItemAsync(menuItem);
         }
 
         public async Task DeleteMenuItemAsync(int menuItemId)
         {
-            var menuItem = await _context.MenuItems.FindAsync(menuItemId);
-            if (menuItem != null)
-            {
-                _context.MenuItems.Remove(menuItem);
-                await _context.SaveChangesAsync();
-            }
+            await _menuItemRepository.DeleteMenuItemAsync(menuItemId);
         }
     }
 }

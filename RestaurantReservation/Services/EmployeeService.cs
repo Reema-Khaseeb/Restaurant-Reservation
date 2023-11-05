@@ -1,55 +1,41 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
+using RestaurantReservation.Interfaces;
 
-public class EmployeeService
+namespace RestaurantReservation.Services
 {
-    private readonly RestaurantReservationDbContext _context;
-
-    public EmployeeService(RestaurantReservationDbContext context)
+    public class EmployeeService : IEmployeeService
     {
-        _context = context;
-    }
+        private readonly IEmployeeRepository _employeeRepository;
 
-    public async Task CreateEmployeeAsync(Employee employee)
-    {
-        if (employee == null)
+        public EmployeeService(IEmployeeRepository employeeRepository)
         {
-            throw new ArgumentNullException(nameof(employee));
+            _employeeRepository = employeeRepository;
         }
 
-        await _context.Employees.AddAsync(employee);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task<Employee> GetEmployeeAsync(int employeeId)
-    {
-        return await _context.Employees.FindAsync(employeeId);
-    }
-
-    public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
-    {
-        return await _context.Employees.ToListAsync();
-    }
-
-    public async Task UpdateEmployeeAsync(Employee employee)
-    {
-        if (employee == null)
+        public async Task CreateEmployeeAsync(Employee employee)
         {
-            throw new ArgumentNullException(nameof(employee));
+            await _employeeRepository.CreateEmployeeAsync(employee);
         }
 
-        _context.Employees.Update(employee);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteEmployeeAsync(int employeeId)
-    {
-        var employee = await _context.Employees.FindAsync(employeeId);
-        if (employee != null)
+        public async Task<Employee> GetEmployeeAsync(int employeeId)
         {
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            return await _employeeRepository.GetEmployeeAsync(employeeId);
+        }
+
+        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        {
+            return await _employeeRepository.GetAllEmployeesAsync();
+        }
+
+        public async Task UpdateEmployeeAsync(Employee employee)
+        {
+            await _employeeRepository.UpdateEmployeeAsync(employee);
+        }
+
+        public async Task DeleteEmployeeAsync(int employeeId)
+        {
+            await _employeeRepository.DeleteEmployeeAsync(employeeId);
         }
     }
 }
