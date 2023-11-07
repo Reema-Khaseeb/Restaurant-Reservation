@@ -61,5 +61,14 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(o => o.EmployeeId == employeeId)
                 .AverageAsync(o => o.TotalAmount) ?? 0;
         }
+
+        public async Task<IEnumerable<Order>> ListOrdersAndMenuItemsAsync(int reservationId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.MenuItem)
+                .Where(o => o.ReservationId == reservationId)
+                .ToListAsync();
+        }
     }
 }

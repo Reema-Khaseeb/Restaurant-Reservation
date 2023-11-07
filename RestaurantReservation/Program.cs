@@ -97,3 +97,17 @@ foreach (var customerReservation in customerReservations)
 var employeeId = 1;
 var averageAmount = await orderService.CalculateAverageOrderAmountAsync(employeeId);
 Console.WriteLine($"\nAverage Order Amount for Employee ID {employeeId} = {averageAmount:C}\n\n");
+
+var reservationId = 3;
+var ordersAndMenuItems = await orderService.ListOrdersAndMenuItemsAsync(reservationId);
+foreach (var orderAndMenuItem in ordersAndMenuItems)
+{
+    Console.WriteLine($"Order ID: {orderAndMenuItem.OrderId}");
+
+    foreach (var orderItem_ in orderAndMenuItem.OrderItems)
+    {
+        var menuItem_ = orderItem_.MenuItem;
+        Console.WriteLine($"  Item ID: {orderItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
+        
+    }
+}

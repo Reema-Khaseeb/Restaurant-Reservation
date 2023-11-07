@@ -42,5 +42,10 @@ namespace RestaurantReservation.Services
         {
             return await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
         }
+
+        public async Task<IEnumerable<Order>> ListOrdersAndMenuItemsAsync(int reservationId)
+        {
+            return await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
+        }
     }
 }
