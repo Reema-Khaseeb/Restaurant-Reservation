@@ -76,3 +76,10 @@ foreach (var customerData in allCustomers)
     Console.WriteLine($"Phone Number: {customerData.PhoneNumber}");
     Console.WriteLine();
 }
+
+Console.WriteLine("List of Managers:");
+var managers = await employeeService.ListManagersAsync();
+foreach (var manager in managers)
+{
+    Console.WriteLine($"Manager ID: {manager.EmployeeId}, Name: {manager.FirstName} {manager.LastName}");
+}

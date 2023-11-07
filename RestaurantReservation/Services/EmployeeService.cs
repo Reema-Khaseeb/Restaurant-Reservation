@@ -37,5 +37,10 @@ namespace RestaurantReservation.Services
         {
             await _employeeRepository.DeleteEmployeeAsync(employeeId);
         }
+
+        public async Task<IEnumerable<Employee>> ListManagersAsync()
+        {
+            return await _employeeRepository.ListManagersAsync();
+        }
     }
 }

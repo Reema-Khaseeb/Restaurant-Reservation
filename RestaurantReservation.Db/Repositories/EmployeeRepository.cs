@@ -55,7 +55,7 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<List<Employee>> ListManagersAsync()
+        public async Task<IEnumerable<Employee>> ListManagersAsync()
         {
             return await _context.Employees
                 .Where(e => e.Position == "Manager")
