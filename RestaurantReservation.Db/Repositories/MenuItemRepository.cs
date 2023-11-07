@@ -54,14 +54,5 @@ namespace RestaurantReservation.Db.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
-        public async Task<List<MenuItem>> ListOrderedMenuItemsAsync(int reservationId)
-        {
-            return await _context.OrderItems
-                .Where(oi => oi.Order.ReservationId == reservationId)
-                .Select(oi => oi.MenuItem)
-                .Distinct()
-                .ToListAsync();
-        }
     }
 }
