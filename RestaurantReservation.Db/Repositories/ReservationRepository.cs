@@ -55,7 +55,7 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<List<Reservation>> GetReservationsByCustomerAsync(int customerId)
+        public async Task<IEnumerable<Reservation>> GetReservationsByCustomerAsync(int customerId)
         {
             return await _context.Reservations
                 .Where(r => r.CustomerId == customerId)

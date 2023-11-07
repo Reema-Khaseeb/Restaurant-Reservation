@@ -37,5 +37,10 @@ namespace RestaurantReservation.Services
         {
             await _reservationRepository.DeleteReservationAsync(reservationId);
         }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsByCustomerAsync(int customerId)
+        {
+            return await _reservationRepository.GetReservationsByCustomerAsync(customerId);
+        }
     }
 }

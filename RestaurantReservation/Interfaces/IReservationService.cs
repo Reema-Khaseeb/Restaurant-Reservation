@@ -9,5 +9,6 @@ namespace RestaurantReservation.Interfaces
         Task<IEnumerable<Reservation>> GetAllReservationsAsync();
         Task<Reservation> GetReservationAsync(int reservationId);
         Task UpdateReservationAsync(Reservation reservation);
+        Task<IEnumerable<Reservation>> GetReservationsByCustomerAsync(int customerId);
     }
 }

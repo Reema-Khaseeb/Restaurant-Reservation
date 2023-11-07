@@ -83,3 +83,13 @@ foreach (var manager in managers)
 {
     Console.WriteLine($"Manager ID: {manager.EmployeeId}, Name: {manager.FirstName} {manager.LastName}");
 }
+
+Console.WriteLine("\nReservations by Customer ID:");
+var customerId = 3;
+var customerReservations = await reservationService.GetReservationsByCustomerAsync(customerId);
+foreach (var customerReservation in customerReservations)
+{
+    Console.WriteLine("\n\t- Reservation ID: " + customerReservation.ReservationId + ",");
+    Console.WriteLine("\t- Date: " + customerReservation.ReservationDate + ",");
+    Console.WriteLine("\t- PartySize: " + customerReservation.PartySize);
+}
