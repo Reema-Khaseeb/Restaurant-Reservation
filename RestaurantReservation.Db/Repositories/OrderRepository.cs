@@ -55,22 +55,11 @@ namespace RestaurantReservation.Db.Repositories
             }
         }
 
-        public async Task<List<Order>> ListOrdersAndMenuItemsAsync(int reservationId)
-        {
-            return await _context.Orders
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.MenuItem)
-                .Where(o => o.ReservationId == reservationId)
-                .ToListAsync();
-        }
-
         public async Task<double> CalculateAverageOrderAmountAsync(int employeeId)
         {
-            var average = await _context.Orders
+            return await _context.Orders
                 .Where(o => o.EmployeeId == employeeId)
-                .AverageAsync(o => o.TotalAmount);
-
-            return average ?? 0.0;
+                .AverageAsync(o => o.TotalAmount) ?? 0;
         }
     }
 }

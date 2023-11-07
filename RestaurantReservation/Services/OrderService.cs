@@ -37,5 +37,10 @@ namespace RestaurantReservation.Services
         {
             await _orderRepository.DeleteOrderAsync(orderId);
         }
+
+        public async Task<double> CalculateAverageOrderAmountAsync(int employeeId)
+        {
+            return await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+        }
     }
 }

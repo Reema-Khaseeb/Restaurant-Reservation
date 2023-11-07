@@ -93,3 +93,7 @@ foreach (var customerReservation in customerReservations)
     Console.WriteLine("\t- Date: " + customerReservation.ReservationDate + ",");
     Console.WriteLine("\t- PartySize: " + customerReservation.PartySize);
 }
+
+var employeeId = 1;
+var averageAmount = await orderService.CalculateAverageOrderAmountAsync(employeeId);
+Console.WriteLine($"\nAverage Order Amount for Employee ID {employeeId} = {averageAmount:C}\n\n");
