@@ -11,5 +11,6 @@ namespace RestaurantReservation.Db.Interfaces
         Task UpdateOrderAsync(Order order);
         Task<double> CalculateAverageOrderAmountAsync(int employeeId);
         Task<IEnumerable<Order>> ListOrdersAndMenuItemsAsync(int reservationId);
+        Task<IEnumerable<MenuItem>> ListOrderedMenuItemsAsync(int reservationId);
     }
 }

@@ -47,5 +47,10 @@ namespace RestaurantReservation.Services
         {
             return await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
         }
+
+        public async Task<IEnumerable<MenuItem>> ListOrderedMenuItemsAsync(int reservationId)
+        {
+            return await _orderRepository.ListOrderedMenuItemsAsync(reservationId);
+        }
     }
 }

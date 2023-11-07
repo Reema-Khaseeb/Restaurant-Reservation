@@ -70,5 +70,15 @@ namespace RestaurantReservation.Db.Repositories
                 .Where(o => o.ReservationId == reservationId)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<MenuItem>> ListOrderedMenuItemsAsync(int reservationId)
+        {
+            return await _context.Orders
+                .Where(order => order.ReservationId == reservationId)
+                .SelectMany(order => order.OrderItems)
+                .Select(orderItem => orderItem.MenuItem)
+                .OrderBy(menuItem => menuItem.ItemId)
+                .ToListAsync();
+        }
     }
 }

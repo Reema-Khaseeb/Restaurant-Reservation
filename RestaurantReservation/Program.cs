@@ -111,3 +111,8 @@ foreach (var orderAndMenuItem in ordersAndMenuItems)
         
     }
 }
+
+var orderedMenuItems = await orderService.ListOrderedMenuItemsAsync(reservationId);
+Console.WriteLine($"Ordered Menu Items for Reservation ID {reservationId}:");
+foreach (var menuItem_ in orderedMenuItems)
+    Console.WriteLine($"  Item ID: {menuItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
