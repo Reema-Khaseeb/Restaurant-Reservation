@@ -1,58 +1,41 @@
-﻿using RestaurantReservation.Db;
+﻿using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
-using Microsoft.EntityFrameworkCore;
+using RestaurantReservation.Interfaces;
 
 namespace RestaurantReservation.Services
 {
-    public class RestaurantService
+    public class RestaurantService : IRestaurantService
     {
-        private readonly RestaurantReservationDbContext _context;
+        private readonly IRestaurantRepository _restaurantRepository;
 
-        public RestaurantService(RestaurantReservationDbContext context)
+        public RestaurantService(IRestaurantRepository restaurantRepository)
         {
-            _context = context;
+            _restaurantRepository = restaurantRepository;
         }
 
         public async Task CreateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant == null)
-            {
-                throw new ArgumentNullException(nameof(restaurant));
-            }
-
-            await _context.Restaurants.AddAsync(restaurant);
-            await _context.SaveChangesAsync();
+            await _restaurantRepository.CreateRestaurantAsync(restaurant);
         }
 
         public async Task<Restaurant> GetRestaurantAsync(int restaurantId)
         {
-            return await _context.Restaurants.FindAsync(restaurantId);
+            return await _restaurantRepository.GetRestaurantAsync(restaurantId);
         }
 
         public async Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync()
         {
-            return await _context.Restaurants.ToListAsync();
+            return await _restaurantRepository.GetAllRestaurantsAsync();
         }
 
         public async Task UpdateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant == null)
-            {
-                throw new ArgumentNullException(nameof(restaurant));
-            }
-
-            _context.Restaurants.Update(restaurant);
-            await _context.SaveChangesAsync();
+            await _restaurantRepository.UpdateRestaurantAsync(restaurant);
         }
 
         public async Task DeleteRestaurantAsync(int restaurantId)
         {
-            var restaurant = await _context.Restaurants.FindAsync(restaurantId);
-            if (restaurant != null)
-            {
-                _context.Restaurants.Remove(restaurant);
-                await _context.SaveChangesAsync();
-            }
+            await _restaurantRepository.DeleteRestaurantAsync(restaurantId);
         }
     }
 }

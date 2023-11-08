@@ -1,18 +1,29 @@
 ﻿using RestaurantReservation.Db;
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Services;
+using RestaurantReservation.Db.Repositories;
 
 using var context = new RestaurantReservationDbContext();
 
+// Create repository instances
+var customerRepository = new CustomerRepository(context);
+var restaurantRepository = new RestaurantRepository(context);
+var reservationRepository = new ReservationRepository(context);
+var orderItemRepository = new OrderItemRepository(context);
+var orderRepository = new OrderRepository(context);
+var tableRepository = new TableRepository(context);
+var employeeRepository = new EmployeeRepository(context);
+var menuItemRepository = new MenuItemRepository(context);
+
 // Create services for each entity
-var customerService = new CustomerService(context);
-var restaurantService = new RestaurantService(context);
-var reservationService = new ReservationService(context);
-var orderItemService = new OrderItemService(context);
-var orderService = new OrderService(context);
-var tableService = new TableService(context);
-var employeeService = new EmployeeService(context);
-var menuItemService = new MenuItemService(context);
+var customerService = new CustomerService(customerRepository);
+var restaurantService = new RestaurantService(restaurantRepository);
+var reservationService = new ReservationService(reservationRepository);
+var orderItemService = new OrderItemService(orderItemRepository);
+var orderService = new OrderService(orderRepository);
+var tableService = new TableService(tableRepository);
+var employeeService = new EmployeeService(employeeRepository);
+var menuItemService = new MenuItemService(menuItemRepository);
 
 // Create sample data
 var customer = new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "123-456-7890" };
@@ -55,7 +66,6 @@ var allTables = await tableService.GetAllTablesAsync();
 var allEmployees = await employeeService.GetAllEmployeesAsync();
 var allMenuItems = await menuItemService.GetAllMenuItemsAsync();
 
-
 // Print Customers' data
 foreach (var customerData in allCustomers)
 {
@@ -67,6 +77,42 @@ foreach (var customerData in allCustomers)
     Console.WriteLine();
 }
 
+Console.WriteLine("List of Managers:");
+var managers = await employeeService.ListManagersAsync();
+foreach (var manager in managers)
+{
+    Console.WriteLine($"Manager ID: {manager.EmployeeId}, Name: {manager.FirstName} {manager.LastName}");
+}
 
+Console.WriteLine("\nReservations by Customer ID:");
+var customerId = 3;
+var customerReservations = await reservationService.GetReservationsByCustomerAsync(customerId);
+foreach (var customerReservation in customerReservations)
+{
+    Console.WriteLine("\n\t- Reservation ID: " + customerReservation.ReservationId + ",");
+    Console.WriteLine("\t- Date: " + customerReservation.ReservationDate + ",");
+    Console.WriteLine("\t- PartySize: " + customerReservation.PartySize);
+}
 
+var employeeId = 1;
+var averageAmount = await orderService.CalculateAverageOrderAmountAsync(employeeId);
+Console.WriteLine($"\nAverage Order Amount for Employee ID {employeeId} = {averageAmount:C}\n\n");
 
+var reservationId = 3;
+var ordersAndMenuItems = await orderService.ListOrdersAndMenuItemsAsync(reservationId);
+foreach (var orderAndMenuItem in ordersAndMenuItems)
+{
+    Console.WriteLine($"Order ID: {orderAndMenuItem.OrderId}");
+
+    foreach (var orderItem_ in orderAndMenuItem.OrderItems)
+    {
+        var menuItem_ = orderItem_.MenuItem;
+        Console.WriteLine($"  Item ID: {orderItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
+        
+    }
+}
+
+var orderedMenuItems = await orderService.ListOrderedMenuItemsAsync(reservationId);
+Console.WriteLine($"Ordered Menu Items for Reservation ID {reservationId}:");
+foreach (var menuItem_ in orderedMenuItems)
+    Console.WriteLine($"  Item ID: {menuItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
