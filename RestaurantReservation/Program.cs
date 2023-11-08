@@ -14,6 +14,7 @@ var orderRepository = new OrderRepository(context);
 var tableRepository = new TableRepository(context);
 var employeeRepository = new EmployeeRepository(context);
 var menuItemRepository = new MenuItemRepository(context);
+var reservationDetailsViewRepository = new ReservationDetailsViewRepository(context);
 
 // Create services for each entity
 var customerService = new CustomerService(customerRepository);
@@ -24,6 +25,7 @@ var orderService = new OrderService(orderRepository);
 var tableService = new TableService(tableRepository);
 var employeeService = new EmployeeService(employeeRepository);
 var menuItemService = new MenuItemService(menuItemRepository);
+var reservationDetailsViewService = new ReservationDetailsViewService(reservationDetailsViewRepository);
 
 // Create sample data
 var customer = new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "123-456-7890" };
@@ -116,3 +118,15 @@ var orderedMenuItems = await orderService.ListOrderedMenuItemsAsync(reservationI
 Console.WriteLine($"Ordered Menu Items for Reservation ID {reservationId}:");
 foreach (var menuItem_ in orderedMenuItems)
     Console.WriteLine($"  Item ID: {menuItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
+
+var reservationDetails = await reservationDetailsViewService.GetReservationDetailsViewAsync();
+foreach (var reservationDetailsView in reservationDetails)
+{
+    Console.WriteLine($"Reservation ID: {reservationDetailsView.ReservationId}");
+    Console.WriteLine($"Customer Name: {reservationDetailsView.FirstName} {reservationDetailsView.LastName}");
+    Console.WriteLine($"Customer Email: {reservationDetailsView.Email}");
+    Console.WriteLine($"Restaurant Name: {reservationDetailsView.RestaurantName}");
+    Console.WriteLine($"Reservation Date: {reservationDetailsView.ReservationDate}");
+    Console.WriteLine($"Party Size: {reservationDetailsView.PartySize}");
+    Console.WriteLine();
+}
