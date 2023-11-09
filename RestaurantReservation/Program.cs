@@ -147,3 +147,12 @@ foreach (var employeeReservationDetails in employeeWithRestaurantDetails)
 var restaurantId = 1;
 decimal totalRevenue = await restaurantService.CalculateRestaurantTotalRevenueAsync(restaurantId);
 Console.WriteLine($"Total Revenue for Restaurant ID {restaurantId}: {totalRevenue:C}");
+
+
+var partySizeThreshold = 5;
+Console.WriteLine($"\n\n----------- Customers With Reservation PartySize > {partySizeThreshold}: -----------"); 
+var customersByReservationPartySize = await customerService.FindCustomersByReservationPartySizeAsync(partySizeThreshold);
+foreach (var customerByReservationPartySize in customersByReservationPartySize)
+{
+    Console.WriteLine($"\t- Customer ID: {customerByReservationPartySize.CustomerId}, First Name: {customerByReservationPartySize.FirstName}");
+}
