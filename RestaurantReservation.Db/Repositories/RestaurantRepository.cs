@@ -54,5 +54,15 @@ namespace RestaurantReservation.Db.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<decimal> CalculateRestaurantTotalRevenueAsync(int restaurantId)
+        {
+            var result = await _context.Restaurants
+                .FromSqlInterpolated($"SELECT dbo.CalculateRestaurantTotalRevenue({restaurantId}) AS TotalRevenue")
+                .Select(rt => rt.TotalRevenue)
+                .FirstOrDefaultAsync();
+
+            return result ?? 0;
+        }
     }
 }

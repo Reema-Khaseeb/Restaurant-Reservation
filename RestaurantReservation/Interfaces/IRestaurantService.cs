@@ -9,5 +9,6 @@ namespace RestaurantReservation.Interfaces
         Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
         Task UpdateRestaurantAsync(Restaurant restaurant);
         Task DeleteRestaurantAsync(int restaurantId);
+        Task<decimal> CalculateRestaurantTotalRevenueAsync(int restaurantId);
     }
 }

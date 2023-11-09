@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-
 namespace RestaurantReservation.Db.Interfaces
 {
     public interface IRestaurantRepository
@@ -9,5 +8,6 @@ namespace RestaurantReservation.Db.Interfaces
         Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
         Task UpdateRestaurantAsync(Restaurant restaurant);
         Task DeleteRestaurantAsync(int restaurantId);
+        Task<decimal> CalculateRestaurantTotalRevenueAsync(int restaurantId);
     }
 }

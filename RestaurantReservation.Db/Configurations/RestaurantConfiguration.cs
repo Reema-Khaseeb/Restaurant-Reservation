@@ -10,6 +10,9 @@ namespace RestaurantReservation.Db.Configurations
         {
             // Primary Key
             builder.HasKey(r => r.RestaurantId);
+            builder
+                .Property(r => r.TotalRevenue)
+                .HasColumnType("DECIMAL(10, 2)");
 
             // Seed data
             builder.HasData(
