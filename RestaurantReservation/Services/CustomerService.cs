@@ -15,11 +15,6 @@ namespace RestaurantReservation.Services
 
         public async Task CreateCustomerAsync(Customer customer)
         {
-            if (customer == null)
-            {
-                throw new ArgumentNullException(nameof(customer));
-            }
-
             await _customerRepository.CreateCustomerAsync(customer);
         }
 
@@ -35,11 +30,6 @@ namespace RestaurantReservation.Services
 
         public async Task UpdateCustomerAsync(Customer customer)
         {
-            if (customer == null)
-            {
-                throw new ArgumentNullException(nameof(customer));
-            }
-
             await _customerRepository.UpdateCustomerAsync(customer);
         }
 
