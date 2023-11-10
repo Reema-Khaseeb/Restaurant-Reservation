@@ -37,5 +37,11 @@ namespace RestaurantReservation.Services
         {
             await _restaurantRepository.DeleteRestaurantAsync(restaurantId);
         }
+
+        public async Task<decimal> CalculateRestaurantTotalRevenueAsync(int restaurantId)
+        {
+            return await _restaurantRepository.CalculateRestaurantTotalRevenueAsync(restaurantId);
+        }
+
     }
 }

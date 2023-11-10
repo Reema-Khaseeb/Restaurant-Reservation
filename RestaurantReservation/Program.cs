@@ -143,3 +143,7 @@ foreach (var employeeReservationDetails in employeeWithRestaurantDetails)
     Console.WriteLine($"Restaurant: {employeeReservationDetails.RestaurantName}");
     Console.WriteLine();
 }
+
+var restaurantId = 1;
+decimal totalRevenue = await restaurantService.CalculateRestaurantTotalRevenueAsync(restaurantId);
+Console.WriteLine($"Total Revenue for Restaurant ID {restaurantId}: {totalRevenue:C}");
