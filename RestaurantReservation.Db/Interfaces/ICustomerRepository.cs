@@ -9,5 +9,6 @@ namespace RestaurantReservation.Db.Interfaces
         Task<IEnumerable<Customer>> GetAllCustomersAsync();
         Task UpdateCustomerAsync(Customer customer);
         Task DeleteCustomerAsync(int customerId);
+        Task<IEnumerable<Customer>> FindCustomersByReservationPartySizeAsync(int partySizeThreshold);
     }
 }
