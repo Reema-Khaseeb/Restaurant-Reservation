@@ -15,13 +15,15 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateEmployeeAsync(Employee employee)
         {
-            if (employee == null)
+            if (employee != null)
+            {
+                await _context.Employees.AddAsync(employee);
+                await _context.SaveChangesAsync();
+            }
+            else
             {
                 throw new ArgumentNullException(nameof(employee));
             }
-
-            await _context.Employees.AddAsync(employee);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<Employee> GetEmployeeAsync(int employeeId)
@@ -36,13 +38,15 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {
-            if (employee == null)
+            if (employee != null)
+            {
+                _context.Employees.Update(employee);
+                await _context.SaveChangesAsync();
+            }
+            else
             {
                 throw new ArgumentNullException(nameof(employee));
             }
-
-            _context.Employees.Update(employee);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteEmployeeAsync(int employeeId)

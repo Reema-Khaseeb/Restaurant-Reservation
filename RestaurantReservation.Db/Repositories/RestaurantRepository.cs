@@ -15,13 +15,15 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant == null)
+            if (restaurant != null)
+            {
+                await _context.Restaurants.AddAsync(restaurant);
+                await _context.SaveChangesAsync();
+            }
+            else
             {
                 throw new ArgumentNullException(nameof(restaurant));
             }
-
-            await _context.Restaurants.AddAsync(restaurant);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<Restaurant> GetRestaurantAsync(int restaurantId)
@@ -36,13 +38,15 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant == null)
+            if (restaurant != null)
+            {
+                _context.Restaurants.Update(restaurant);
+                await _context.SaveChangesAsync();
+            }
+            else
             {
                 throw new ArgumentNullException(nameof(restaurant));
             }
-
-            _context.Restaurants.Update(restaurant);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteRestaurantAsync(int restaurantId)

@@ -15,11 +15,6 @@ namespace RestaurantReservation.Services
 
         public async Task CreateMenuItemAsync(MenuItem menuItem)
         {
-            if (menuItem == null)
-            {
-                throw new ArgumentNullException(nameof(menuItem));
-            }
-
             await _menuItemRepository.CreateMenuItemAsync(menuItem);
         }
 
@@ -35,11 +30,6 @@ namespace RestaurantReservation.Services
 
         public async Task UpdateMenuItemAsync(MenuItem menuItem)
         {
-            if (menuItem == null)
-            {
-                throw new ArgumentNullException(nameof(menuItem));
-            }
-
             await _menuItemRepository.UpdateMenuItemAsync(menuItem);
         }
 
