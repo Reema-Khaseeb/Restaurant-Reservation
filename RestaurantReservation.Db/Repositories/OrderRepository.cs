@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateOrderAsync(Order order)
         {
-            if (order != null)
-            {
-                await _context.Orders.AddAsync(order);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Order> GetOrderAsync(int orderId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateOrderAsync(Order order)
         {
-            if (order != null)
-            {
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(order));
-            }
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteOrderAsync(int orderId)
+        public async Task DeleteOrderAsync(Order order)
         {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<double> CalculateAverageOrderAmountAsync(int employeeId)

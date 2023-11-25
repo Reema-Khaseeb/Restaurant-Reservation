@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 
-namespace RestaurantReservation.Db.Interfaces
+namespace RestaurantReservation.Db.Repositories.Interfaces
 {
     public interface IEmployeeRepository
     {
@@ -8,7 +8,8 @@ namespace RestaurantReservation.Db.Interfaces
         Task<Employee> GetEmployeeAsync(int employeeId);
         Task<IEnumerable<Employee>> GetAllEmployeesAsync();
         Task UpdateEmployeeAsync(Employee employee);
-        Task DeleteEmployeeAsync(int employeeId);
+        Task DeleteEmployeeAsync(Employee employee);
         Task<IEnumerable<Employee>> ListManagersAsync();
+        Task<IEnumerable<EmployeeWithRestaurantDetails>> GetEmployeesWithRestaurantDetailsAsync();
     }
 }

@@ -1,11 +1,11 @@
 ﻿using RestaurantReservation.Db.Models;
 
-namespace RestaurantReservation.Db.Interfaces
+namespace RestaurantReservation.Db.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
         Task CreateOrderAsync(Order order);
-        Task DeleteOrderAsync(int orderId);
+        Task DeleteOrderAsync(Order order);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task<Order> GetOrderAsync(int orderId);
         Task UpdateOrderAsync(Order order);

@@ -1,25 +1,31 @@
-﻿using RestaurantReservation.Db.Interfaces;
-using RestaurantReservation.Db.Models;
+﻿using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
+using RestaurantReservation.Validators;
 
 namespace RestaurantReservation.Services
 {
     public class ReservationService : IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
+        private readonly IObjectValidator _objectValidator;
 
-        public ReservationService(IReservationRepository reservationRepository)
+        public ReservationService(IReservationRepository reservationRepository, IObjectValidator objectValidator)
         {
-            _reservationRepository = reservationRepository;
+            _reservationRepository = reservationRepository ?? throw new ArgumentNullException(nameof(reservationRepository));
+            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateReservationAsync(Reservation reservation)
         {
+            _objectValidator.ValidateObjectNotNull(reservation);
             await _reservationRepository.CreateReservationAsync(reservation);
         }
 
         public async Task<Reservation> GetReservationAsync(int reservationId)
         {
+            _objectValidator.ValidatePositiveObjectId(reservationId);
             return await _reservationRepository.GetReservationAsync(reservationId);
         }
 
@@ -30,17 +36,26 @@ namespace RestaurantReservation.Services
 
         public async Task UpdateReservationAsync(Reservation reservation)
         {
+            _objectValidator.ValidateObjectNotNull(reservation);
             await _reservationRepository.UpdateReservationAsync(reservation);
         }
 
         public async Task DeleteReservationAsync(int reservationId)
         {
-            await _reservationRepository.DeleteReservationAsync(reservationId);
+            var reservation = await _reservationRepository.GetReservationAsync(reservationId);
+
+            _objectValidator.ValidateObjectNotNull(reservation);
+            await _reservationRepository.DeleteReservationAsync(reservation);
         }
 
         public async Task<IEnumerable<Reservation>> GetReservationsByCustomerAsync(int customerId)
         {
             return await _reservationRepository.GetReservationsByCustomerAsync(customerId);
+        }
+
+        public async Task<IEnumerable<ReservationDetailsView>> GetReservationDetailsViewAsync()
+        {
+            return await _reservationRepository.GetReservationDetailsViewAsync();
         }
     }
 }

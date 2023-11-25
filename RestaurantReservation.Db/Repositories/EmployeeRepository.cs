@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
 using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservation.Db.Utilities;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +16,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateEmployeeAsync(Employee employee)
         {
-            if (employee != null)
-            {
-                await _context.Employees.AddAsync(employee);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
+            await _context.Employees.AddAsync(employee);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Employee> GetEmployeeAsync(int employeeId)
@@ -38,32 +32,26 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {
-            if (employee != null)
-            {
-                _context.Employees.Update(employee);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
+            _context.Employees.Update(employee);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteEmployeeAsync(int employeeId)
+        public async Task DeleteEmployeeAsync(Employee employee)
         {
-            var employee = await _context.Employees.FindAsync(employeeId);
-            if (employee != null)
-            {
-                _context.Employees.Remove(employee);
-                await _context.SaveChangesAsync();
-            }
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Employee>> ListManagersAsync()
         {
             return await _context.Employees
-                .Where(e => e.Position == "Manager")
+                .Where(e => e.Position == Constants.ManagerPosition)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<EmployeeWithRestaurantDetails>> GetEmployeesWithRestaurantDetailsAsync()
+        {
+            return await _context.EmployeesWithRestaurantDetails.ToListAsync();
         }
     }
 }
