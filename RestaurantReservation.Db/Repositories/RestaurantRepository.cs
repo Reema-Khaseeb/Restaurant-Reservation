@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant != null)
-            {
-                await _context.Restaurants.AddAsync(restaurant);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(restaurant));
-            }
+            await _context.Restaurants.AddAsync(restaurant);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Restaurant> GetRestaurantAsync(int restaurantId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateRestaurantAsync(Restaurant restaurant)
         {
-            if (restaurant != null)
-            {
-                _context.Restaurants.Update(restaurant);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(restaurant));
-            }
+            _context.Restaurants.Update(restaurant);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteRestaurantAsync(int restaurantId)
+        public async Task DeleteRestaurantAsync(Restaurant restaurant)
         {
-            var restaurant = await _context.Restaurants.FindAsync(restaurantId);
-            if (restaurant != null)
-            {
-                _context.Restaurants.Remove(restaurant);
-                await _context.SaveChangesAsync();
-            }
+            _context.Restaurants.Remove(restaurant);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<decimal> CalculateRestaurantTotalRevenueAsync(int restaurantId)

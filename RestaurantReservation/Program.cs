@@ -2,8 +2,13 @@
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Services;
 using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Interfaces;
+using RestaurantReservation.Validators;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 using var context = new RestaurantReservationDbContext();
+
+var objectValidator = new ObjectValidator();
 
 // Create repository instances
 var customerRepository = new CustomerRepository(context);
@@ -14,20 +19,16 @@ var orderRepository = new OrderRepository(context);
 var tableRepository = new TableRepository(context);
 var employeeRepository = new EmployeeRepository(context);
 var menuItemRepository = new MenuItemRepository(context);
-var reservationDetailsViewRepository = new ReservationDetailsViewRepository(context);
-var employeeWithRestaurantDetailsRepository = new EmployeeWithRestaurantDetailsRepository(context);
 
 // Create services for each entity
-var customerService = new CustomerService(customerRepository);
-var restaurantService = new RestaurantService(restaurantRepository);
-var reservationService = new ReservationService(reservationRepository);
-var orderItemService = new OrderItemService(orderItemRepository);
-var orderService = new OrderService(orderRepository);
-var tableService = new TableService(tableRepository);
-var employeeService = new EmployeeService(employeeRepository);
-var menuItemService = new MenuItemService(menuItemRepository);
-var reservationDetailsViewService = new ReservationDetailsViewService(reservationDetailsViewRepository);
-var employeeWithRestaurantDetailsService = new EmployeeWithRestaurantDetailsService(employeeWithRestaurantDetailsRepository);
+var customerService = new CustomerService(customerRepository, objectValidator);
+var restaurantService = new RestaurantService(restaurantRepository, objectValidator);
+var reservationService = new ReservationService(reservationRepository, objectValidator);
+var orderItemService = new OrderItemService(orderItemRepository, objectValidator);
+var orderService = new OrderService(orderRepository, objectValidator);
+var tableService = new TableService(tableRepository, objectValidator);
+var employeeService = new EmployeeService(employeeRepository, objectValidator);
+var menuItemService = new MenuItemService(menuItemRepository, objectValidator);
 
 // Create sample data
 var customer = new Customer { FirstName = "John", LastName = "Doe", Email = "john@example.com", PhoneNumber = "123-456-7890" };
@@ -58,7 +59,7 @@ if (retrievedCustomer != null)
 }
 
 // Delete data
-await customerService.DeleteCustomerAsync(4);
+await customerService.DeleteCustomerAsync(2);
 
 // Retrieve and list all entities
 var allCustomers = await customerService.GetAllCustomersAsync();
@@ -122,7 +123,7 @@ foreach (var menuItem_ in orderedMenuItems)
     Console.WriteLine($"  Item ID: {menuItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
 
 Console.WriteLine("\n----------- Reservations with their associated Customer and Restaurant View -----------");
-var reservationDetails = await reservationDetailsViewService.GetReservationDetailsViewAsync();
+var reservationDetails = await reservationService.GetReservationDetailsViewAsync();
 foreach (var reservationDetailsView in reservationDetails)
 {
     Console.WriteLine($"Reservation ID: {reservationDetailsView.ReservationId}");
@@ -135,7 +136,7 @@ foreach (var reservationDetailsView in reservationDetails)
 }
 
 Console.WriteLine("\n----------- Employee With Restaurant Details View -----------");
-var employeeWithRestaurantDetails = await employeeWithRestaurantDetailsService.GetEmployeesWithRestaurantDetailsAsync();
+var employeeWithRestaurantDetails = await employeeService.GetEmployeesWithRestaurantDetailsAsync();
 foreach (var employeeReservationDetails in employeeWithRestaurantDetails)
 {
     Console.WriteLine($"Employee Name: {employeeReservationDetails.FirstName} {employeeReservationDetails.LastName}");

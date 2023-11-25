@@ -1,25 +1,31 @@
-﻿using RestaurantReservation.Db.Interfaces;
-using RestaurantReservation.Db.Models;
+﻿using RestaurantReservation.Db.Models;
+using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
+using RestaurantReservation.Validators;
 
 namespace RestaurantReservation.Services
 {
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IObjectValidator _objectValidator;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IObjectValidator objectValidator)
         {
-            _orderRepository = orderRepository;
+            _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
+            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateOrderAsync(Order order)
         {
+            _objectValidator.ValidateObjectNotNull(order);
             await _orderRepository.CreateOrderAsync(order);
         }
 
         public async Task<Order> GetOrderAsync(int orderId)
         {
+            _objectValidator.ValidatePositiveObjectId(orderId);
             return await _orderRepository.GetOrderAsync(orderId);
         }
 
@@ -30,12 +36,16 @@ namespace RestaurantReservation.Services
 
         public async Task UpdateOrderAsync(Order order)
         {
+            _objectValidator.ValidateObjectNotNull(order);
             await _orderRepository.UpdateOrderAsync(order);
         }
 
         public async Task DeleteOrderAsync(int orderId)
         {
-            await _orderRepository.DeleteOrderAsync(orderId);
+            var order = await _orderRepository.GetOrderAsync(orderId);
+
+            _objectValidator.ValidateObjectNotNull(order);
+            await _orderRepository.DeleteOrderAsync(order);
         }
 
         public async Task<double> CalculateAverageOrderAmountAsync(int employeeId)

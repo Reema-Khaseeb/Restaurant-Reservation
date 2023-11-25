@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateTableAsync(Table table)
         {
-            if (table != null)
-            {
-                await _context.Tables.AddAsync(table);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
+            await _context.Tables.AddAsync(table);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Table> GetTableAsync(int tableId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateTableAsync(Table table)
         {
-            if (table != null)
-            {
-                _context.Tables.Update(table);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
+            _context.Tables.Update(table);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTableAsync(int tableId)
+        public async Task DeleteTableAsync(Table table)
         {
-            var table = await _context.Tables.FindAsync(tableId);
-            if (table != null)
-            {
-                _context.Tables.Remove(table);
-                await _context.SaveChangesAsync();
-            }
+            _context.Tables.Remove(table);
+            await _context.SaveChangesAsync();
         }
     }
 }

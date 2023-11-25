@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateReservationAsync(Reservation reservation)
         {
-            if (reservation != null)
-            {
-                await _context.Reservations.AddAsync(reservation);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(reservation));
-            }
+            await _context.Reservations.AddAsync(reservation);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Reservation> GetReservationAsync(int reservationId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateReservationAsync(Reservation reservation)
         {
-            if (reservation != null)
-            {
-                _context.Reservations.Update(reservation);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(reservation));
-            }
+            _context.Reservations.Update(reservation);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteReservationAsync(int reservationId)
+        public async Task DeleteReservationAsync(Reservation reservation)
         {
-            var reservation = await _context.Reservations.FindAsync(reservationId);
-            if (reservation != null)
-            {
-                _context.Reservations.Remove(reservation);
-                await _context.SaveChangesAsync();
-            }
+            _context.Reservations.Remove(reservation);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Reservation>> GetReservationsByCustomerAsync(int customerId)
@@ -64,6 +46,11 @@ namespace RestaurantReservation.Db.Repositories
             return await _context.Reservations
                 .Where(r => r.CustomerId == customerId)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ReservationDetailsView>> GetReservationDetailsViewAsync()
+        {
+            return await _context.ReservationDetailsViews.ToListAsync();
         }
     }
 }

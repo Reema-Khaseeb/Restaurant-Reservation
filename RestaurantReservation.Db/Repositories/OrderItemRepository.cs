@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateOrderItemAsync(OrderItem orderItem)
         {
-            if (orderItem != null)
-            {
-                await _context.OrderItems.AddAsync(orderItem);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(orderItem));
-            }
+            await _context.OrderItems.AddAsync(orderItem);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<OrderItem> GetOrderItemAsync(int orderItemId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateOrderItemAsync(OrderItem orderItem)
         {
-            if (orderItem != null)
-            {
-                _context.OrderItems.Update(orderItem);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(orderItem));
-            }
+            _context.OrderItems.Update(orderItem);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteOrderItemAsync(int orderItemId)
+        public async Task DeleteOrderItemAsync(OrderItem orderItem)
         {
-            var orderItem = await _context.OrderItems.FindAsync(orderItemId);
-            if (orderItem != null)
-            {
-                _context.OrderItems.Remove(orderItem);
-                await _context.SaveChangesAsync();
-            }
+            _context.OrderItems.Remove(orderItem);
+            await _context.SaveChangesAsync();
         }
     }
 }

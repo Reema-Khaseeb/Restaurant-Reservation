@@ -1,6 +1,6 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Interfaces;
+using RestaurantReservation.Db.Repositories.Interfaces;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -15,15 +15,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task CreateCustomerAsync(Customer customer)
         {
-            if (customer != null)
-            {
-                await _context.Customers.AddAsync(customer);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(customer));
-            }
+            await _context.Customers.AddAsync(customer);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Customer> GetCustomerAsync(int customerId)
@@ -38,25 +31,14 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task UpdateCustomerAsync(Customer customer)
         {
-            if (customer != null)
-            {
-                _context.Customers.Update(customer);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(customer));
-            }
+            _context.Customers.Update(customer);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteCustomerAsync(int customerId)
+        public async Task DeleteCustomerAsync(Customer customer)
         {
-            var customer = await _context.Customers.FindAsync(customerId);
-            if (customer != null)
-            {
-                _context.Customers.Remove(customer);
-                await _context.SaveChangesAsync();
-            }
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Customer>> FindCustomersByReservationPartySizeAsync(int partySizeThreshold)
