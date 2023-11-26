@@ -136,8 +136,8 @@ foreach (var reservationDetailsView in reservationDetails)
 }
 
 Console.WriteLine("\n----------- Employee With Restaurant Details View -----------");
-var employeeWithRestaurantDetails = await employeeService.GetEmployeesWithRestaurantDetailsAsync();
-foreach (var employeeReservationDetails in employeeWithRestaurantDetails)
+var employeeWithRestaurantDetailsView = await employeeService.GetEmployeesWithRestaurantDetailsAsync();
+foreach (var employeeReservationDetails in employeeWithRestaurantDetailsView)
 {
     Console.WriteLine($"Employee Name: {employeeReservationDetails.FirstName} {employeeReservationDetails.LastName}");
     Console.WriteLine($"Position: {employeeReservationDetails.Position}");

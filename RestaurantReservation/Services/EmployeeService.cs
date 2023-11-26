@@ -54,7 +54,7 @@ namespace RestaurantReservation.Services
             return await _employeeRepository.ListManagersAsync();
         }
 
-        public async Task<IEnumerable<EmployeeWithRestaurantDetails>> GetEmployeesWithRestaurantDetailsAsync()
+        public async Task<IEnumerable<EmployeeWithRestaurantDetailsView>> GetEmployeesWithRestaurantDetailsAsync()
         {
             return await _employeeRepository.GetEmployeesWithRestaurantDetailsAsync();
         }

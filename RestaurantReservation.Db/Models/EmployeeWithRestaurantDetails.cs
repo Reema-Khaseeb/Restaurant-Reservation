@@ -1,6 +1,6 @@
 ﻿namespace RestaurantReservation.Db.Models
 {
-    public class EmployeeWithRestaurantDetails
+    public class EmployeeWithRestaurantDetailsView
     {
         public int EmployeeId { get; set; }
         public string FirstName { get; set; }
