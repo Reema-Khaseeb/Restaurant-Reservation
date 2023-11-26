@@ -49,9 +49,9 @@ namespace RestaurantReservation.Db.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<EmployeeWithRestaurantDetails>> GetEmployeesWithRestaurantDetailsAsync()
+        public async Task<IEnumerable<EmployeeWithRestaurantDetailsView>> GetEmployeesWithRestaurantDetailsAsync()
         {
-            return await _context.EmployeesWithRestaurantDetails.ToListAsync();
+            return await _context.EmployeesWithRestaurantDetailsViews.ToListAsync();
         }
     }
 }
