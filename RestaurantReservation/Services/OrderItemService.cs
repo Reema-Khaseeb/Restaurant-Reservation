@@ -45,7 +45,7 @@ namespace RestaurantReservation.Services
             var orderItem = await _orderItemRepository.GetOrderItemAsync(orderItemId);
 
             _objectValidator.ValidateObjectNotNull(orderItem);
-            await _orderItemRepository.DeleteOrderItemAsync(orderItemId);
+            await _orderItemRepository.DeleteOrderItemAsync(orderItem);
         }
     }
 }
