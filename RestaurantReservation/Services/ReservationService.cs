@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
 using RestaurantReservation.Validators;
@@ -13,8 +12,9 @@ namespace RestaurantReservation.Services
 
         public ReservationService(IReservationRepository reservationRepository, IObjectValidator objectValidator)
         {
-            _reservationRepository = reservationRepository ?? throw new ArgumentNullException(nameof(reservationRepository));
-            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
+            _reservationRepository = reservationRepository;
+            _objectValidator = objectValidator ?? 
+                throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateReservationAsync(Reservation reservation)

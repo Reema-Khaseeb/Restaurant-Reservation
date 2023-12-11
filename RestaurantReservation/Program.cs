@@ -2,9 +2,7 @@
 using RestaurantReservation.Db.Models;
 using RestaurantReservation.Services;
 using RestaurantReservation.Db.Repositories;
-using RestaurantReservation.Interfaces;
 using RestaurantReservation.Validators;
-using RestaurantReservation.Db.Repositories.Interfaces;
 
 using var context = new RestaurantReservationDbContext();
 

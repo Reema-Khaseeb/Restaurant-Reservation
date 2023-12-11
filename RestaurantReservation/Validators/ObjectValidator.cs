@@ -1,11 +1,4 @@
-﻿using RestaurantReservation.Db.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RestaurantReservation.Validators
+﻿namespace RestaurantReservation.Validators
 {
     public class ObjectValidator : IObjectValidator
     {
