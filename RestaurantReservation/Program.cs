@@ -103,20 +103,20 @@ Console.WriteLine($"\nAverage Order Amount for Employee ID {employeeId} = {avera
 
 var reservationId = 3;
 var ordersAndMenuItems = await orderService.ListOrdersAndMenuItemsAsync(reservationId);
-foreach (var orderAndMenuItem in ordersAndMenuItems)
+Console.WriteLine($"\n----------- Orders and Menu Items for Reservation ID {reservationId}: -----------");
+foreach (var (order_, menuItems) in ordersAndMenuItems)
 {
-    Console.WriteLine($"Order ID: {orderAndMenuItem.OrderId}");
+    Console.WriteLine($"Order ID: {order_.OrderId}, Order Date: {order_.OrderDate}");
 
-    foreach (var orderItem_ in orderAndMenuItem.OrderItems)
+    foreach (var menuItem_ in menuItems)
     {
-        var menuItem_ = orderItem_.MenuItem;
-        Console.WriteLine($"  Item ID: {orderItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
-        
+        Console.WriteLine($"    MenuItem ID: {menuItem_.ItemId}," +
+            $"Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
     }
 }
 
 var orderedMenuItems = await orderService.ListOrderedMenuItemsAsync(reservationId);
-Console.WriteLine($"Ordered Menu Items for Reservation ID {reservationId}:");
+Console.WriteLine($"\n----------- Ordered Menu Items for Reservation ID {reservationId}: -----------");
 foreach (var menuItem_ in orderedMenuItems)
     Console.WriteLine($"  Item ID: {menuItem_.ItemId}, Name: {menuItem_.ItemName}, Price: {menuItem_.Price:C}");
 
