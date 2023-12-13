@@ -1,6 +1,7 @@
 ﻿using RestaurantReservation.Db.Models;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservation.Db.Repositories.Interfaces;
+using RestaurantReservation.Db.Utilities.Exceptions;
 
 namespace RestaurantReservation.Db.Repositories
 {
@@ -21,7 +22,8 @@ namespace RestaurantReservation.Db.Repositories
 
         public async Task<Reservation> GetReservationAsync(int reservationId)
         {
-            return await _context.Reservations.FindAsync(reservationId);
+            return await _context.Reservations.FindAsync(reservationId)
+                ?? throw new NotFoundException($"Reservation with ID {reservationId} not found.");
         }
 
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
