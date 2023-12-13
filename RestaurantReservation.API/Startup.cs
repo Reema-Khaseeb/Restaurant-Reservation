@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RestaurantReservation.API.Utilities;
 using RestaurantReservation.API.Utilities.Extensions;
+using RestaurantReservation.API.Utilities.Validators;
 using RestaurantReservation.Db;
 using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
 using RestaurantReservation.Services;
+using RestaurantReservation.Validators;
 using System.Text;
 
 namespace RestaurantReservation.API
@@ -41,7 +45,11 @@ namespace RestaurantReservation.API
             services.AddAuthorization();
             services.AddSingleton<JwtTokenGenerator>();
 
-            // Repositories and Services
+            // Scoped services
+            services.AddScoped<IObjectValidator, ObjectValidator>();
+            services.AddScoped<RestaurantReservationDbContext>();
+
+            // Register repositories and services
             services.RegisterEntityServices<IReservationService, IReservationRepository, 
                 ReservationService, ReservationRepository>();
             services.RegisterEntityServices<ICustomerService, ICustomerRepository, 
@@ -51,7 +59,13 @@ namespace RestaurantReservation.API
             services.RegisterEntityServices<IEmployeeService, IEmployeeRepository, 
                 EmployeeService, EmployeeRepository>();
 
-            services.AddScoped<RestaurantReservationDbContext>();
+            // AutoMapper
+            services.AddAutoMapper(typeof(Startup), typeof(MappingProfile));
+
+            // Add Contrllers along with Fluent Validation
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ReservationValidator>());
+
         }
 
         // Configure the HTTP request pipeline
