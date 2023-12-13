@@ -26,10 +26,32 @@ namespace RestaurantReservation.API
         // Add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            ConfigureAuthentication(services);
+            ConfigureAuthorization(services);
+            ConfigureAutoMapper(services);
+            ConfigureControllers(services);
+        }
+
+
+        // Configure the HTTP request pipeline
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            // Add the Controller to the API
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    // Retrieve the secret key from configuration
                     var secretKey = Configuration["Authentication:SecretKey"];
 
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -41,50 +63,39 @@ namespace RestaurantReservation.API
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                     };
                 });
+        }
 
+        private void ConfigureAuthorization(IServiceCollection services)
+        {
             services.AddAuthorization();
             services.AddSingleton<JwtTokenGenerator>();
+        }
 
-            // Scoped services
+        private void ConfigureScopedServices(IServiceCollection services)
+        {
             services.AddScoped<IObjectValidator, ObjectValidator>();
             services.AddScoped<RestaurantReservationDbContext>();
 
-            // Register repositories and services
-            services.RegisterEntityServices<IReservationService, IReservationRepository, 
+            services.RegisterEntityServices<IReservationService, IReservationRepository,
                 ReservationService, ReservationRepository>();
-            services.RegisterEntityServices<ICustomerService, ICustomerRepository, 
+            services.RegisterEntityServices<ICustomerService, ICustomerRepository,
                 CustomerService, CustomerRepository>();
-            services.RegisterEntityServices<IRestaurantService, IRestaurantRepository, 
+            services.RegisterEntityServices<IRestaurantService, IRestaurantRepository,
                 RestaurantService, RestaurantRepository>();
-            services.RegisterEntityServices<IEmployeeService, IEmployeeRepository, 
+            services.RegisterEntityServices<IEmployeeService, IEmployeeRepository,
                 EmployeeService, EmployeeRepository>();
-
-            // AutoMapper
-            services.AddAutoMapper(typeof(Startup), typeof(MappingProfile));
-
-            // Add Contrllers along with Fluent Validation
-            services.AddControllers()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ReservationValidator>());
-
         }
 
-        // Configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app)
+        private void ConfigureAutoMapper(IServiceCollection services)
         {
-            // Enable authentication
-            app.UseAuthentication();
+            services.AddAutoMapper(typeof(Startup), typeof(MappingProfile));
+        }
 
-            // Add routing
-            app.UseRouting();
-
-            // Add authorization
-            app.UseAuthorization();
-
-            // Add the Controller to the API
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+        private void ConfigureControllers(IServiceCollection services)
+        {
+            services.AddControllers()
+                .AddFluentValidation(fv => fv
+                .RegisterValidatorsFromAssemblyContaining<ReservationValidator>());
         }
     }
 }
