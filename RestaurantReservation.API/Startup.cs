@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RestaurantReservation.API.Services;
 using RestaurantReservation.API.Utilities;
 using RestaurantReservation.API.Utilities.Extensions;
 using RestaurantReservation.API.Utilities.Validators;
@@ -74,6 +75,7 @@ namespace RestaurantReservation.API
         private void ConfigureScopedServices(IServiceCollection services)
         {
             services.AddScoped<IObjectValidator, ObjectValidator>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<RestaurantReservationDbContext>();
 
             services.RegisterEntityServices<IReservationService, IReservationRepository,
