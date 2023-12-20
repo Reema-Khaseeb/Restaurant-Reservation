@@ -80,13 +80,15 @@ namespace RestaurantReservation.API
         private void ConfigureAuthorization(IServiceCollection services)
         {
             services.AddAuthorization();
-            services.AddSingleton<JwtTokenGenerator>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+
         }
 
         private void ConfigureScopedServices(IServiceCollection services)
         {
             services.AddScoped<IObjectValidator, ObjectValidator>();
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
             services.AddScoped<RestaurantReservationDbContext>();
 
             services.RegisterEntityServices<IReservationService, IReservationRepository,
