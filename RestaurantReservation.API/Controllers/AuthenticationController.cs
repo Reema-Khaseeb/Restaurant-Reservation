@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.API.DTOs;
+using RestaurantReservation.API.Services;
+using RestaurantReservation.Services;
 
 namespace RestaurantReservation.API.Controllers
 {
@@ -9,10 +11,12 @@ namespace RestaurantReservation.API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly JwtTokenGenerator _tokenGenerator;
+        private readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController(JwtTokenGenerator tokenGenerator)
+        public AuthenticationController(IJwtTokenGenerator tokenGenerator, IAuthenticationService authenticationService)
         {
             _tokenGenerator = tokenGenerator;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("login")]
@@ -20,7 +24,7 @@ namespace RestaurantReservation.API.Controllers
         public IActionResult Login([FromBody] LoginCredentialsDTO LoginCredentials)
         {
             // Validate user credentials
-            if (IsValidUser(LoginCredentials))
+            if (_authenticationService.IsValidUser(LoginCredentials))
             {
                 // If valid, generate and return a JWT token
                 var token = _tokenGenerator.GenerateToken(LoginCredentials);
@@ -31,19 +35,12 @@ namespace RestaurantReservation.API.Controllers
             // If invalid credentials, return an unauthorized response
             return Unauthorized(new { Message = "Invalid username or password" });
         }
-
-        public bool IsValidUser(LoginCredentialsDTO LoginCredentials)
-        {
-            var validUsers = new Dictionary<string, string>
             {
-                {"user1", "password1"},
-                {"user2", "password2"}
+                ErrorMessage = "Invalid username or password"
             };
 
-            // Check if the provided username exists and the password matches
-            return validUsers.TryGetValue(
-                LoginCredentials.Username, out var expectedPassword) &&
-                LoginCredentials.Password == expectedPassword;
+            // If invalid credentials, return an unauthorized response
+            return Unauthorized(new { Message = "Invalid username or password" });
         }
     }
 }
