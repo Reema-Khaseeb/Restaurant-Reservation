@@ -1,6 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RestaurantReservation.API.Services;
 using RestaurantReservation.API.Utilities;
 using RestaurantReservation.API.Utilities.Extensions;
@@ -11,6 +12,7 @@ using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
 using RestaurantReservation.Services;
 using RestaurantReservation.Validators;
+using System.Reflection;
 using System.Text;
 
 namespace RestaurantReservation.API
@@ -31,15 +33,24 @@ namespace RestaurantReservation.API
             ConfigureAuthorization(services);
             ConfigureAutoMapper(services);
             ConfigureControllers(services);
+            ConfigureScopedServices(services);
+            ConfigureSwagger(services);
         }
 
 
         // Configure the HTTP request pipeline
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
+            ConfigureSwaggerUI(app);
+
+            //to get more detailed error information
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             // Add the Controller to the API
             app.UseEndpoints(endpoints =>
@@ -98,6 +109,32 @@ namespace RestaurantReservation.API
             services.AddControllers()
                 .AddFluentValidation(fv => fv
                 .RegisterValidatorsFromAssemblyContaining<ReservationValidator>());
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Restaurant Reservation API",
+                    Version = "v1"
+                });
+
+                // Include XML comments for Swagger documentation
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
+        }
+
+        private void ConfigureSwaggerUI(IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RestaurantReservationApiV1");
+            });
         }
     }
 }
