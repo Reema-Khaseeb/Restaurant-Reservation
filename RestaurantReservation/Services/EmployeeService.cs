@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
+﻿using RestaurantReservation.Db.Models;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
 using RestaurantReservation.Validators;
@@ -14,8 +12,9 @@ namespace RestaurantReservation.Services
 
         public EmployeeService(IEmployeeRepository employeeRepository, IObjectValidator objectValidator)
         {
-            _employeeRepository = employeeRepository ?? throw new ArgumentNullException(nameof(employeeRepository));
-            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
+            _employeeRepository = employeeRepository;
+            _objectValidator = objectValidator ??
+                throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateEmployeeAsync(Employee employee)

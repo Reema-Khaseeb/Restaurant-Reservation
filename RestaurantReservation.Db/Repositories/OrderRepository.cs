@@ -48,21 +48,26 @@ namespace RestaurantReservation.Db.Repositories
                 .AverageAsync(o => o.TotalAmount) ?? 0;
         }
 
-        public async Task<IEnumerable<Order>> ListOrdersAndMenuItemsAsync(int reservationId)
+        public async Task<List<(Order order, IEnumerable<MenuItem> menuItems)>> ListOrdersAndMenuItemsAsync(int reservationId)
         {
-            return await _context.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.MenuItem)
+            var ordersAndMenuItems = await _context.Orders
                 .Where(o => o.ReservationId == reservationId)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.MenuItem)
                 .ToListAsync();
+
+            return ordersAndMenuItems
+                .Select(o => (o, o.OrderItems.Select(oi => oi.MenuItem).Distinct()))
+                .ToList();
         }
 
         public async Task<IEnumerable<MenuItem>> ListOrderedMenuItemsAsync(int reservationId)
         {
             return await _context.Orders
                 .Where(order => order.ReservationId == reservationId)
-                .SelectMany(order => order.OrderItems)
-                .Select(orderItem => orderItem.MenuItem)
+                .SelectMany(order => order.OrderItems
+                    .Select(orderItem => orderItem.MenuItem))
+                .Distinct()
                 .OrderBy(menuItem => menuItem.ItemId)
                 .ToListAsync();
         }

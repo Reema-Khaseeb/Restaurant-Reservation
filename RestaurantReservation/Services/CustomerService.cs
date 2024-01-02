@@ -12,8 +12,9 @@ namespace RestaurantReservation.Services
 
         public CustomerService(ICustomerRepository customerRepository, IObjectValidator objectValidator)
         {
-            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
+            _customerRepository = customerRepository;
+            _objectValidator = objectValidator ??
+                throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateCustomerAsync(Customer customer)

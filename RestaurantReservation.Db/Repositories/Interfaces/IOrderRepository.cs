@@ -10,7 +10,7 @@ namespace RestaurantReservation.Db.Repositories.Interfaces
         Task<Order> GetOrderAsync(int orderId);
         Task UpdateOrderAsync(Order order);
         Task<double> CalculateAverageOrderAmountAsync(int employeeId);
-        Task<IEnumerable<Order>> ListOrdersAndMenuItemsAsync(int reservationId);
+        Task<List<(Order order, IEnumerable<MenuItem> menuItems)>> ListOrdersAndMenuItemsAsync(int reservationId);
         Task<IEnumerable<MenuItem>> ListOrderedMenuItemsAsync(int reservationId);
     }
 }

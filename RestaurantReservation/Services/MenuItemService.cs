@@ -1,5 +1,4 @@
 ﻿using RestaurantReservation.Db.Models;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Interfaces;
 using RestaurantReservation.Validators;
@@ -13,8 +12,9 @@ namespace RestaurantReservation.Services
 
         public MenuItemService(IMenuItemRepository menuItemRepository, IObjectValidator objectValidator)
         {
-            _menuItemRepository = menuItemRepository ?? throw new ArgumentNullException(nameof(menuItemRepository));
-            _objectValidator = objectValidator ?? throw new ArgumentNullException(nameof(objectValidator));
+            _menuItemRepository = menuItemRepository;
+            _objectValidator = objectValidator ??
+                throw new ArgumentNullException(nameof(objectValidator));
         }
 
         public async Task CreateMenuItemAsync(MenuItem menuItem)
@@ -45,7 +45,7 @@ namespace RestaurantReservation.Services
             var menuItem = await _menuItemRepository.GetMenuItemAsync(menuItemId);
 
             _objectValidator.ValidateObjectNotNull(menuItem);
-            await _menuItemRepository.DeleteMenuItemAsync(menuItemId);
+            await _menuItemRepository.DeleteMenuItemAsync(menuItem);
         }
     }
 }
